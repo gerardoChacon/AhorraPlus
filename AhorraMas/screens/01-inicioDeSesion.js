@@ -17,7 +17,6 @@ const PantallaInicial = () => {
 
       <Text style={styles.nombreApp}>AHORRA+APP</Text>
       <ActivityIndicator size="large" color="white" style={{marginTop: 40}}/>
-      <Text style={styles.loadingText}>Cargando...</Text>
 
     </View>
   );
@@ -30,6 +29,7 @@ export default function InicioDeSesion() {
   const [inicioApp, setInicioApp] = useState(true);
 
   useEffect( () => {
+    console.log("Pantalla");
     const tiempo = setTimeout(() => {
       setInicioApp(false);
     }, 3000);
@@ -40,13 +40,13 @@ export default function InicioDeSesion() {
 
   if (inicioApp) {
     return <PantallaInicial/>;
-  } 
-
-  return (
-    <View>
-      <Text>Hola</Text>
-    </View>
-  )
+  } else {
+    return (
+      <View>
+        <Text style={styles.texto}>Hola mundo</Text>
+      </View>
+    )
+  }
 
    
 }
@@ -78,4 +78,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
   },
-})
+
+  texto: {
+    fontSize: 20,
+    color: 'black',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+
+});

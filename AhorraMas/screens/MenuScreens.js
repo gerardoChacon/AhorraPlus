@@ -12,17 +12,17 @@ export default function MenuScreens() {
     const [screen, setScreen] = useState('Menu');
     switch(screen) {
         case 'inicioDeSesion':
-            return <inicioDeSesion/>
+            return <InicioDeSesion/>
         case 'registroDeUsuario':
-            return <registroDeUsuario/>
+            return <RegistroDeUsuario/>
         case 'graficasScreen':
-            return <graficasScreen/>
+            return <GraficasScreen/>
         case 'ingresos':
-            return <ingresos/>
+            return <Ingresos/>
         case 'egresos':
-            return <egresos/>
+            return <Egresos/>
         case 'presupuestosMensuales':
-            return <presupuestosMensuales/>
+            return <PresupuestosMensuales/>
         case 'Menu':
             default:
                 return (
@@ -65,5 +65,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '60%',
     gap: 10,
+    
   }
 })
