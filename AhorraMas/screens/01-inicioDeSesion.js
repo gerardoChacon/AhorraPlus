@@ -5,7 +5,7 @@ export default class inicioDeSesion extends Component {
   render() {
     return (
       <View>
-        <Text></Text>
+        <Text>hola mundo</Text>
       </View>
     )
   }
