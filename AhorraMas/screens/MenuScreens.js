@@ -1,12 +1,12 @@
-import { Text, StyleSheet, View, Button } from 'react-native'
-import React, { useState } from 'react'
+import { Text, StyleSheet, View, Button } from 'react-native';
+import React, { useState } from 'react';
 
-import inicioDeSesion from './01-inicioDeSesion';
-import registroDeUsuario from './02-registroDeUsuario';
-import graficasScreen from './03-graficasScreen';
-import ingresos from './04-ingresos';
-import egresos from './05-egresos';
-import presupuestosMensuales from './06-presupuestosMensuales';
+import InicioDeSesion from './01-inicioDeSesion';
+import RegistroDeUsuario from './02-registroDeUsuario';
+import GraficasScreen from './03-graficasScreen';
+import Ingresos from './04-ingresos';
+import Egresos from './05-egresos';
+import PresupuestosMensuales from './06-presupuestosMensuales';
 
 export default function MenuScreens() {
     const [screen, setScreen] = useState('Menu');
@@ -26,7 +26,7 @@ export default function MenuScreens() {
         case 'Menu':
             default:
                 return (
-                    <View styles={styles.container}>
+                    <View style={styles.container}>
 
                         <Text style={styles.title}>Menu Screens Ahorra+App</Text>
 
@@ -49,9 +49,9 @@ export default function MenuScreens() {
 
 const styles = StyleSheet.create({
 
-    container: {
+  container: {
     flex: 1,
-    backgroundColor: '#ffffffff',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    width: '100%',
+    width: '60%',
     gap: 10,
   }
 })
