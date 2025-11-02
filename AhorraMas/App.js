@@ -1,7 +1,8 @@
-import GraficasScreen from './screens/01-graficasScreen';
+
+import EgresosScreen from './screens/05-egresos';
 export default function App() {
   return (
-    <GraficasScreen></GraficasScreen>
+    <EgresosScreen></EgresosScreen>
     
   );
 }
