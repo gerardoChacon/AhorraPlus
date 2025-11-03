@@ -1,5 +1,6 @@
 import { Text, StyleSheet, View, TextInput, Image, ActivityIndicator, Dimensions, TouchableOpacity, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
 const {width, height} = Dimensions.get('window');
 
 
@@ -30,7 +31,19 @@ const Login = () => {
   return (
     <View style={stylesLogin.containerLogin}>
 
-      <View style={stylesLogin.disenoSuperior}/>
+      <View style={stylesLogin.disenoSuperior}>
+        <Svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={440}
+          height={159}
+          fill="none"
+        >
+          <Path
+          fill="#1B5E20"
+          d="M0 0h440v91.5s-70.5-46-174.5-23S0 158.5 0 158.5V0Z"
+          />
+        </Svg>
+      </View>
 
       <View style={stylesLogin.logoContainer}>
 
@@ -46,13 +59,13 @@ const Login = () => {
       <TextInput
         style={stylesLogin.input}
         placeholder="Correo"
-        placeholderTextColor="green"
+        placeholderTextColor="#1B5E20"
       />
 
       <TextInput
         style={stylesLogin.input}
         placeholder="Contraseña"
-        placeholderTextColor="green"
+        placeholderTextColor="#1B5E20"
       />
 
       <TouchableOpacity style={stylesLogin.botonSesion}>
@@ -71,7 +84,19 @@ const Login = () => {
 
       </View>
 
-      <View style={stylesLogin.disenoInferior}/>
+      <View style={stylesLogin.disenoInferior}>
+        <Svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={440}
+          height={258}
+          fill="none"
+        >
+          <Path
+            fill="#1B5E20"
+            d="M0 141.393s25.5-1.143 228.5-17.534C431.5 107.467 440 0 440 0v258H0V141.393Z"
+          />
+        </Svg>
+      </View>
 
 
     </View>
@@ -115,7 +140,7 @@ const stylesIntro = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1e8449',
+    backgroundColor: '#1B5E20',
   },
 
   logo: {
@@ -141,34 +166,25 @@ const stylesLogin = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-
-  disenoSuperior: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: width * 1.5,
-    height: 180,
-    backgroundColor: 'green',
-    borderBottomLeftRadius: width * 0.8,
-    zIndex: 1,
-  },
+  
 
   logoContainer: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 0,
     zIndex: 10,
   },
 
   logo:{
-    width: 60,
-    height: 60,
+    width: 150,
+    height: 150,
+    marginBottom: 10,
     resizeMode: 'contain',
   },
 
   titulo: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 10,
     alignSelf: 'flex-start',
     color: '#000000ff',
     zIndex: 10,
@@ -181,7 +197,7 @@ const stylesLogin = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 25,
     paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 40,
     fontSize: 16,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -197,11 +213,11 @@ const stylesLogin = StyleSheet.create({
   botonSesion: {
     width: '100%',
     height: 50,
-    backgroundColor: 'green',
+    backgroundColor: '#1B5E20',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 0,
     zIndex: 10,
   },
 
@@ -216,24 +232,15 @@ const stylesLogin = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 20,
+    marginTop: 30,
     paddingHorizontal: 10,
     zIndex: 10,
   },
 
   linkText: {
-    color: 'green',
+    color: '#1B5E20',
     fontSize: 14,
   },
 
-  disenoInferior: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: width * 1.5,
-    height: 180,
-    backgroundColor: 'green',
-    borderTopRightRadius: width * 0.8,
-  }
 
 });
