@@ -1,7 +1,7 @@
-import GraficasScreen from './screens/01-graficasScreen';
+import MenuScreens from './screens/MenuScreens';
 export default function App() {
   return (
-    <GraficasScreen></GraficasScreen>
+    <MenuScreens></MenuScreens>
     
   );
 }
