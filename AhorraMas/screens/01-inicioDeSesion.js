@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, TextInput, Image, ActivityIndicator, Dimensions } from 'react-native'
+import { Text, StyleSheet, View, TextInput, Image, ActivityIndicator, Dimensions, TouchableOpacity, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
 const {width, height} = Dimensions.get('window');
 
@@ -39,11 +39,41 @@ const Login = () => {
         style={stylesLogin.logo}
         />
 
-        
-
       </View>
 
       <Text style={stylesLogin.titulo}>Iniciar sesión</Text>
+
+      <TextInput
+        style={stylesLogin.input}
+        placeholder="Correo"
+        placeholderTextColor="green"
+      />
+
+      <TextInput
+        style={stylesLogin.input}
+        placeholder="Contraseña"
+        placeholderTextColor="green"
+      />
+
+      <TouchableOpacity style={stylesLogin.botonSesion}>
+        <Text style={stylesLogin.botonText}>Iniciar sesión</Text>
+      </TouchableOpacity>
+
+      <View style={stylesLogin.linksContainer}>
+
+        <TouchableOpacity>
+          <Text style={stylesLogin.linkText}>¿Has olvidado tu contraseña?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Text style={stylesLogin.linkText}>Crear cuenta</Text>
+        </TouchableOpacity>
+
+      </View>
+
+      <View style={stylesLogin.disenoInferior}/>
+
+
     </View>
 
     
@@ -143,5 +173,67 @@ const stylesLogin = StyleSheet.create({
     color: '#000000ff',
     zIndex: 10,
     fontFamily: 'Montserrat',
+  },
+
+  input: {
+    width: '100%',
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    fontFamily: 'Montserrat',
+    zIndex: 10,
+  },
+
+  botonSesion: {
+    width: '100%',
+    height: 50,
+    backgroundColor: 'green',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    zIndex: 10,
+  },
+
+  botonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: 'Montserrat',
+  },
+
+  linksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 20,
+    paddingHorizontal: 10,
+    zIndex: 10,
+  },
+
+  linkText: {
+    color: 'green',
+    fontSize: 14,
+  },
+
+  disenoInferior: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: width * 1.5,
+    height: 180,
+    backgroundColor: 'green',
+    borderTopRightRadius: width * 0.8,
   }
+
 });
