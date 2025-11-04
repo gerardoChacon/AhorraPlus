@@ -86,11 +86,6 @@ export default function HomeScreen() {
     ]);
   };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a253373a896fab1365e1c662b5fb4f27f86a28b1
   // Prepare chart data
   const chartData = {
     labels: accounts.map((a) => a.name),
@@ -217,10 +212,6 @@ export default function HomeScreen() {
     ]);
   };
 
-<<<<<<< HEAD
->>>>>>> a253373a896fab1365e1c662b5fb4f27f86a28b1
-=======
->>>>>>> a253373a896fab1365e1c662b5fb4f27f86a28b1
   const chartData = {
     labels: accounts.map((a) => a.name),
     datasets: [
