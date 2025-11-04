@@ -1,8 +1,7 @@
-
-import EgresosScreen from './screens/05-egresos';
+import MenuScreens from './screens/MenuScreens';
 export default function App() {
   return (
-    <EgresosScreen></EgresosScreen>
+    <MenuScreens></MenuScreens>
     
   );
 }
