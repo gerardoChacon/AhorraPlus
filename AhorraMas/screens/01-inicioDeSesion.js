@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, TextInput, Image, ActivityIndicator, Dimensions, TouchableOpacity, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 const {width, height} = Dimensions.get('window');
 
 
