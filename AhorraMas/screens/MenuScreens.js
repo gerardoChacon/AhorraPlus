@@ -7,12 +7,15 @@ import GraficasScreen from './03-graficasScreen';
 import Ingresos from './04-ingresos';
 import Egresos from './05-egresos';
 import PresupuestosMensuales from './06-presupuestosMensuales';
+import RecuperarContraseña from './recuperarContraseña';
 
 export default function MenuScreens() {
     const [screen, setScreen] = useState('Menu');
     switch(screen) {
         case 'inicioDeSesion':
             return <InicioDeSesion/>
+        case 'recuperarContraseña':
+            return <RecuperarContraseña/>
         case 'registroDeUsuario':
             return <RegistroDeUsuario/>
         case 'graficasScreen':
@@ -33,6 +36,7 @@ export default function MenuScreens() {
                         <View style={styles.buttonContainer}>
 
                             <Button color='green' onPress={()=>setScreen('inicioDeSesion')} title='Inicio de sesion'/>
+                            <Button color='green' onPress={()=>setScreen('recuperarContraseña')} title='Recuperar Contraseña'/>
                             <Button color='green' onPress={()=>setScreen('registroDeUsuario')} title='Registro de Usuario'/>
                             <Button color='green' onPress={()=>setScreen('graficasScreen')} title='Graficas'/>
                             <Button color='green' onPress={()=>setScreen('ingresos')} title='Ingresos'/>
