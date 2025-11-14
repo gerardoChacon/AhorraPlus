@@ -17,7 +17,7 @@ export default function PresupuestoScreen() {
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.subtitle}>Gestión de presupuesto</Text>
+        <Text style={styles.subtitle}>Gestión de presupuestos</Text>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Límite Diario:</Text>
