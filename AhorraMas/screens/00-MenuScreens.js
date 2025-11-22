@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Button } from "react-native";
+/*import { Text, StyleSheet, View, Button } from "react-native";
 import React, { useState } from "react";
 
 import InicioDeSesion from "./01-inicioDeSesion";
@@ -92,4 +92,5 @@ const styles = StyleSheet.create({
     width: "60%",
     gap: 10,
   },
-});
+}); 
+ */ 
