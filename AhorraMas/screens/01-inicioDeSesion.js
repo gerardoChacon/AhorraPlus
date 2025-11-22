@@ -26,7 +26,7 @@ const PantallaInicial = () => {
 
 // Funcion Inicio de sesion
 
-const Login = () => {
+const Login = ({ navigation }) => {
 
   return (
     <View style={stylesLogin.containerLogin}>
@@ -68,9 +68,12 @@ const Login = () => {
         placeholderTextColor="#1B5E20"
       />
 
-      <TouchableOpacity style={stylesLogin.botonSesion}>
-        <Text style={stylesLogin.botonText}>Iniciar sesión</Text>
-      </TouchableOpacity>
+      <TouchableOpacity
+    style={stylesLogin.botonSesion}
+      onPress={() => navigation.replace("MainTabs")}
+  >
+      <Text style={stylesLogin.botonText}>Iniciar sesión</Text>
+    </TouchableOpacity>
 
       <View style={stylesLogin.linksContainer}>
 

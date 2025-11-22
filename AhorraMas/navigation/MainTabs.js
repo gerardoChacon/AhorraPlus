@@ -3,6 +3,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { View, Pressable, Text, StyleSheet, Platform } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
+import PresupuestoScreen from "../screens/06-presupuestosMensuales";
 
 const Tab = createBottomTabNavigator();
 
@@ -113,7 +114,7 @@ export default function MainTabs() {
     >
       <Tab.Screen name="Inicio" component={HomeScreen} />
       <Tab.Screen name="Movimientos" component={HomeScreen} />
-      <Tab.Screen name="Presupuestos" component={HomeScreen} />
+      <Tab.Screen name="Presupuestos" component={PresupuestoScreen} />
       <Tab.Screen name="Configuración" component={HomeScreen} />
     </Tab.Navigator>
   );

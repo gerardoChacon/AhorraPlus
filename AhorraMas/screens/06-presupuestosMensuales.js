@@ -61,6 +61,7 @@ export default function PresupuestoScreen() {
         <TextInput
           style={styles.input}
           placeholder="Ej. 500"
+          placeholderTextColor="#888" 
           value={monto}
           onChangeText={setMonto}
           keyboardType="numeric"
@@ -78,6 +79,7 @@ export default function PresupuestoScreen() {
               <>
                 <TextInput
                   style={styles.input}
+                  placeholderTextColor="#888" 
                   value={montoEditado}
                   onChangeText={setMontoEditado}
                   keyboardType="numeric"
