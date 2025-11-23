@@ -1,4 +1,4 @@
-import MenuScreens from "./screens/00-MenuScreens";
+import Navigation from "./Navegation";
 export default function App() {
-  return <MenuScreens></MenuScreens>;
+  return <Navigation></Navigation>;
 }

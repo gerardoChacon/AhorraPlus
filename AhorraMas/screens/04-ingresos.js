@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
-export default function EgresosScreen() {
+export default function IngresosScreen() {
   return (
     <View style={styles.container}>
       {/* HEADER */}

@@ -3,8 +3,9 @@ import { View, Text, Alert } from "react-native";
 import styles from "./styles/HomeStyles";
 import AccountsList from "../components/AccountsList";
 import AccountsChart from "../components/AccountsChart";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function GraficasScreen() {
+export default function HomeScreen() {
   const [accounts, setAccounts] = useState([
     {
       id: "1",
@@ -86,7 +87,6 @@ export default function GraficasScreen() {
     ]);
   };
 
-  // Prepare chart data
   const chartData = {
     labels: accounts.map((a) => a.name),
     datasets: [
@@ -98,7 +98,9 @@ export default function GraficasScreen() {
   };
 
   return (
+
     <View style={styles.container}>
+        
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Hola, Usuario</Text>
@@ -112,6 +114,7 @@ export default function GraficasScreen() {
       <View style={styles.chartSection}>
         <AccountsChart data={chartData} />
       </View>
+      
 
       <View style={styles.accountsSection}>
         <AccountsList

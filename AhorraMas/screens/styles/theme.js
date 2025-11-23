@@ -1,10 +1,9 @@
-// Shared design tokens and small UI snippets for the app
 export const COLORS = {
   background: "#f2f4f8",
   white: "#ffffff",
   textPrimary: "#111827",
   textSecondary: "#6b7280",
-  success: "#07DF90",
+  success: "#99ff00ff",
   accent: "#0ea5a4",
   chipText: "#ffffff",
   fab: "#0ea5a4",
