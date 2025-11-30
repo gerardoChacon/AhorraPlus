@@ -1,6 +1,7 @@
 import { Text, StyleSheet, View, TextInput, Image, ActivityIndicator, Dimensions, TouchableOpacity, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Svg, { Path } from "react-native-svg";
+import { useNavigation } from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 
@@ -27,6 +28,8 @@ const PantallaInicial = () => {
 // Funcion Inicio de sesion
 
 const Login = () => {
+
+  const navigation = useNavigation();
 
   return (
     <View style={stylesLogin.containerLogin}>
@@ -68,17 +71,25 @@ const Login = () => {
         placeholderTextColor="#1B5E20"
       />
 
-      <TouchableOpacity style={stylesLogin.botonSesion}>
+      <TouchableOpacity 
+        style={stylesLogin.botonSesion}
+        onPress={() => navigation.navigate("MyTabs")}
+      >
+
         <Text style={stylesLogin.botonText}>Iniciar sesión</Text>
       </TouchableOpacity>
 
       <View style={stylesLogin.linksContainer}>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Recuperar")}
+        >
           <Text style={stylesLogin.linkText}>¿Has olvidado tu contraseña?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Registro")}
+        >
           <Text style={stylesLogin.linkText}>Crear cuenta</Text>
         </TouchableOpacity>
 
