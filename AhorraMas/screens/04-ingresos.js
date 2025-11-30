@@ -1,89 +1,168 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  TextInput,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 export default function IngresosScreen() {
+  const hoy = new Date();
+
+  const meses = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
+
+  const mesActual = meses[hoy.getMonth()];
+  const fechaActual = `Hoy, ${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
+  const [ingresos, setIngresos] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [titulo, setTitulo] = useState("");
+  const [cantidad, setCantidad] = useState("");
+
+  // Balance dinámico
+  const totalIngresos = ingresos.reduce((acc, item) => acc + item.cantidad, 0);
+
+  const addIngreso = () => {
+    if (!titulo || !cantidad) return;
+
+    const nuevo = {
+      id: Date.now(),
+      titulo,
+      cantidad: parseFloat(cantidad),
+    };
+
+    setIngresos([...ingresos, nuevo]);
+    setTitulo("");
+    setCantidad("");
+    setModalVisible(false);
+  };
+
+  const deleteIngreso = (id) => {
+    setIngresos(ingresos.filter((item) => item.id !== id));
+  };
+
   return (
     <View style={styles.container}>
-      {/* HEADER */}
+      {/* HEADER CON BALANCE */}
       <View style={styles.header}>
         <Text style={styles.headerText}>A+</Text>
       </View>
 
-      {/* TABS */}
-      <View style={styles.tabs}>
-        <Text style={styles.tab}>Gastos</Text>
-        <Text style={[styles.tab, styles.activeTab]}>Ingresos</Text>
-      </View>
-
       <ScrollView contentContainerStyle={styles.body}>
-        <Text style={styles.month}>Oct</Text>
-        <Text style={styles.date}>Hoy, 30 de Octubre</Text>
+        <Text style={styles.month}>{mesActual}</Text>
+        <Text style={styles.date}>{fechaActual}</Text>
 
-        {/* GRÁFICO */}
         <View style={styles.chart}>
-          <Text style={styles.chartText}>$30,500</Text>
-        </View>
-        <Text style={styles.percentText}>+12% de ingresos este mes</Text>
-
-        {/* LISTA CRUD ESTÉTICO */}
-        <View style={styles.card}>
-          <View>
-            <Text style={styles.cardTitle}>Nómina</Text>
-            <Text style={styles.cardAmount}>$12,300.00</Text>
-          </View>
-          <View style={styles.cardButtons}>
-            <Feather name="edit" size={22} color="#0E5B10" />
-            <Feather name="trash-2" size={22} color="#cc0000" />
-          </View>
+          <Text style={styles.chartText}> ${totalIngresos}</Text>
         </View>
 
-        <View style={styles.card}>
-          <View>
-            <Text style={styles.cardTitle}>Negocio</Text>
-            <Text style={styles.cardAmount}>$6,000.00</Text>
-          </View>
-          <View style={styles.cardButtons}>
-            <Feather name="edit" size={22} color="#0E5B10" />
-            <Feather name="trash-2" size={22} color="#cc0000" />
-          </View>
-        </View>
+        <Text style={styles.percentText}>Ingresos este mes</Text>
 
-        <View style={styles.card}>
-          <View>
-            <Text style={styles.cardTitle}>Intereses</Text>
-            <Text style={styles.cardAmount}>$1,200.00</Text>
+        {/* LISTA DINÁMICA */}
+        {ingresos.map((item) => (
+          <View key={item.id} style={styles.card}>
+            <View>
+              <Text style={styles.cardTitle}>{item.titulo}</Text>
+              <Text style={styles.cardAmount}>${item.cantidad}</Text>
+            </View>
+
+            <TouchableOpacity onPress={() => deleteIngreso(item.id)}>
+              <Feather name="trash-2" size={22} color="#cc0000" />
+            </TouchableOpacity>
           </View>
-          <View style={styles.cardButtons}>
-            <Feather name="edit" size={22} color="#0E5B10" />
-            <Feather name="trash-2" size={22} color="#cc0000" />
-          </View>
-        </View>
+        ))}
+
+        {ingresos.length === 0 && (
+          <Text style={{ textAlign: "center", marginTop: 20, color: "#777" }}>
+            No hay ingresos aún.
+          </Text>
+        )}
       </ScrollView>
 
-      {/* BOTÓN CREAR */}
-      <TouchableOpacity style={styles.plusButton}>
+      {/* BOTÓN + */}
+      <TouchableOpacity
+        style={styles.plusButton}
+        onPress={() => setModalVisible(true)}
+      >
         <Text style={styles.plus}>+</Text>
       </TouchableOpacity>
+
+      {/* MODAL PARA AGREGAR */}
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Nuevo ingreso</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Título (Ej. Nómina)"
+              value={titulo}
+              onChangeText={setTitulo}
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Cantidad"
+              keyboardType="numeric"
+              value={cantidad}
+              onChangeText={setCantidad}
+            />
+
+            <TouchableOpacity style={styles.saveButton} onPress={addIngreso}>
+              <Text style={styles.saveText}>Guardar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.cancelText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f4f4f4" },
+  container: {
+    flex: 1,
+    backgroundColor: "#f4f4f4",
+  },
+
+  chartText: {
+    fontSize: 32,
+  },
 
   header: {
     backgroundColor: "#0E5B10",
     padding: 20,
     alignItems: "flex-end",
   },
-  headerText: { color: "#fff", fontSize: 24, fontWeight: "bold" },
+
+  headerText: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
 
   tabs: {
     flexDirection: "row",
@@ -91,7 +170,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#e8e8e8",
     paddingVertical: 10,
   },
-  tab: { fontSize: 16, color: "#555" },
+
+  tab: {
+    fontSize: 16,
+    color: "#555",
+  },
+
   activeTab: {
     borderBottomWidth: 2,
     borderBottomColor: "#0E5B10",
@@ -99,9 +183,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  body: { padding: 20 },
-  month: { fontSize: 18, fontWeight: "bold", color: "#0E5B10" },
-  date: { color: "#999", marginBottom: 15 },
+  body: {
+    padding: 20,
+  },
+
+  month: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0E5B10",
+  },
+
+  date: {
+    color: "#999",
+    marginBottom: 15,
+  },
 
   chart: {
     width: 200,
@@ -113,8 +208,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  chartText: { fontSize: 24 },
-  percentText: { textAlign: "center", color: "#888", marginBottom: 20 },
+
+  percentText: {
+    textAlign: "center",
+    color: "#888",
+    marginBottom: 20,
+  },
 
   card: {
     backgroundColor: "#fff",
@@ -126,12 +225,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  cardTitle: { fontSize: 16, fontWeight: "600" },
-  cardAmount: { color: "#0E5B10", fontSize: 16, marginTop: 5 },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
 
-  cardButtons: {
-    flexDirection: "row",
-    gap: 15,
+  cardAmount: {
+    color: "#0E5B10",
+    fontSize: 16,
+    marginTop: 5,
   },
 
   plusButton: {
@@ -145,5 +247,64 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  plus: { color: "#fff", fontSize: 32 },
+  plus: {
+    color: "#fff",
+    fontSize: 32,
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalContent: {
+    width: "85%",
+    backgroundColor: "#fff",
+    padding: 25,
+    borderRadius: 12,
+  },
+
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+
+  input: {
+    backgroundColor: "#eee",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+
+  saveButton: {
+    backgroundColor: "#0E5B10",
+    padding: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  saveText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  cancelButton: {
+    padding: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: "#999",
+  },
+
+  cancelText: {
+    color: "#333",
+    fontSize: 16,
+  },
 });
