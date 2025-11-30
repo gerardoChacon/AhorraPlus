@@ -1,12 +1,15 @@
 import { Text, StyleSheet, View, TextInput, Image, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Svg, { Path } from "react-native-svg";
+import { useNavigation } from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 
 // Funcion Registro usuario
 
 const Login = () => {
+
+  const navigation = useNavigation();
 
   return (
     <View style={styles.containerLogin}>
@@ -52,7 +55,9 @@ const Login = () => {
 
 
       <View style={styles.linksContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Login")}
+          >
             <Text style={styles.linkText}>¿Ya tienes cuenta? inicia sesion</Text>
           </TouchableOpacity>
         </View>
