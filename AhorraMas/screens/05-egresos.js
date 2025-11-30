@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,9 +10,22 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-export default function EgresosScreen() {
-  const hoy = new Date();
+import {
+  agregarTransaccion,
+  obtenerTransacciones,
+  eliminarTransaccion,
+} from "../controllers/transaccion.controller";
+import Transaccion from "../models/transaccion.model";
+import { createTables } from "../database/db";
 
+export default function EgresosScreen() {
+  const [lista, setLista] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [titulo, setTitulo] = useState("");
+  const [cantidad, setCantidad] = useState("");
+
+  const hoy = new Date();
   const meses = [
     "Ene",
     "Feb",
@@ -27,40 +40,47 @@ export default function EgresosScreen() {
     "Nov",
     "Dic",
   ];
-
   const mesActual = meses[hoy.getMonth()];
-  const fechaActual = `Hoy, ${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
-  const [egresos, setEgresos] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const fechaActual = `Hoy, ${hoy.getDate()} de ${mesActual}`;
 
-  const [titulo, setTitulo] = useState("");
-  const [cantidad, setCantidad] = useState("");
+  const cargarEgresos = async () => {
+    const data = await obtenerTransacciones();
+    const filtrados = data.filter((t) => t.categoria === "Egreso");
+    setLista(filtrados);
+  };
 
-  // Total dinámico
-  const totalEgresos = egresos.reduce((acc, item) => acc + item.cantidad, 0);
+  useEffect(() => {
+    createTables();
+    cargarEgresos();
+  }, []);
 
-  const addEgreso = () => {
+  const addEgreso = async () => {
     if (!titulo || !cantidad) return;
 
-    const nuevo = {
-      id: Date.now(),
+    const nueva = new Transaccion(
       titulo,
-      cantidad: parseFloat(cantidad),
-    };
+      parseFloat(cantidad),
+      "Egreso",
+      hoy.toISOString().slice(0, 10),
+      ""
+    );
 
-    setEgresos([...egresos, nuevo]);
+    await agregarTransaccion(nueva);
     setTitulo("");
     setCantidad("");
     setModalVisible(false);
+    await cargarEgresos();
   };
 
-  const deleteEgreso = (id) => {
-    setEgresos(egresos.filter((item) => item.id !== id));
+  const deleteEgreso = async (id) => {
+    await eliminarTransaccion(id);
+    await cargarEgresos();
   };
+
+  const total = lista.reduce((acc, t) => acc + t.monto, 0);
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
       <View style={styles.header}>
         <Text style={styles.headerText}>A+</Text>
       </View>
@@ -70,21 +90,19 @@ export default function EgresosScreen() {
         <Text style={styles.date}>{fechaActual}</Text>
 
         <View style={styles.chart}>
-          {/* Muestra total */}
           <Text style={[styles.chartText, { color: "#cc0000" }]}>
-            -${totalEgresos}
+            -${total}
           </Text>
         </View>
 
         <Text style={styles.percentText}>Egresos este mes</Text>
 
-        {/* LISTA DINÁMICA */}
-        {egresos.map((item) => (
+        {lista.map((item) => (
           <View key={item.id} style={styles.card}>
             <View>
               <Text style={styles.cardTitle}>{item.titulo}</Text>
               <Text style={[styles.cardAmount, { color: "#cc0000" }]}>
-                -${item.cantidad}
+                -${item.monto}
               </Text>
             </View>
 
@@ -94,14 +112,11 @@ export default function EgresosScreen() {
           </View>
         ))}
 
-        {egresos.length === 0 && (
-          <Text style={{ textAlign: "center", marginTop: 20, color: "#777" }}>
-            No hay egresos aún.
-          </Text>
+        {lista.length === 0 && (
+          <Text style={styles.empty}>No hay egresos aún.</Text>
         )}
       </ScrollView>
 
-      {/* BOTÓN + */}
       <TouchableOpacity
         style={styles.plusButton}
         onPress={() => setModalVisible(true)}
@@ -109,7 +124,7 @@ export default function EgresosScreen() {
         <Text style={styles.plus}>+</Text>
       </TouchableOpacity>
 
-      {/* MODAL PARA AGREGAR */}
+      {/* MODAL */}
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -117,11 +132,10 @@ export default function EgresosScreen() {
 
             <TextInput
               style={styles.input}
-              placeholder="Título (Ej. Comida)"
+              placeholder="Título"
               value={titulo}
               onChangeText={setTitulo}
             />
-
             <TextInput
               style={styles.input}
               placeholder="Cantidad"
@@ -130,7 +144,10 @@ export default function EgresosScreen() {
               onChangeText={setCantidad}
             />
 
-            <TouchableOpacity style={styles.saveButton} onPress={addEgreso}>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: "#cc0000" }]}
+              onPress={addEgreso}
+            >
               <Text style={styles.saveText}>Guardar</Text>
             </TouchableOpacity>
 
@@ -148,42 +165,12 @@ export default function EgresosScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f4f4f4",
-  },
-
-  chartText: {
-    fontSize: 32,
-  },
-
-  header: {
-    backgroundColor: "#0E5B10",
-    padding: 20,
-    alignItems: "flex-end",
-  },
-
-  headerText: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-
-  body: {
-    padding: 20,
-  },
-
-  month: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#0E5B10",
-  },
-
-  date: {
-    color: "#999",
-    marginBottom: 15,
-  },
-
+  container: { flex: 1, backgroundColor: "#f4f4f4" },
+  header: { backgroundColor: "#0E5B10", padding: 20, alignItems: "flex-end" },
+  headerText: { color: "#fff", fontSize: 24, fontWeight: "bold" },
+  body: { padding: 20 },
+  month: { fontSize: 18, fontWeight: "bold", color: "#0E5B10" },
+  date: { color: "#999", marginBottom: 15 },
   chart: {
     width: 200,
     height: 200,
@@ -194,13 +181,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-
-  percentText: {
-    textAlign: "center",
-    color: "#888",
-    marginBottom: 20,
-  },
-
+  chartText: { fontSize: 32 },
+  percentText: { textAlign: "center", color: "#888", marginBottom: 20 },
+  empty: { textAlign: "center", marginTop: 20, color: "#777" },
   card: {
     backgroundColor: "#fff",
     padding: 15,
@@ -210,17 +193,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-
-  cardAmount: {
-    fontSize: 16,
-    marginTop: 5,
-  },
-
+  cardTitle: { fontSize: 16, fontWeight: "600" },
+  cardAmount: { fontSize: 16 },
   plusButton: {
     backgroundColor: "#0E5B10",
     width: 60,
@@ -232,53 +206,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  plus: {
-    color: "#fff",
-    fontSize: 32,
-  },
-
+  plus: { color: "#fff", fontSize: 32 },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
-
   modalContent: {
     width: "85%",
     backgroundColor: "#fff",
     padding: 25,
     borderRadius: 12,
   },
-
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 15,
     textAlign: "center",
   },
-
   input: {
     backgroundColor: "#eee",
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
   },
-
   saveButton: {
-    backgroundColor: "#cc0000",
     padding: 12,
     borderRadius: 10,
     alignItems: "center",
     marginTop: 10,
   },
-
-  saveText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
+  saveText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   cancelButton: {
     padding: 12,
     borderRadius: 10,
@@ -287,9 +246,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#999",
   },
-
-  cancelText: {
-    color: "#333",
-    fontSize: 16,
-  },
+  cancelText: { color: "#333", fontSize: 16 },
 });
