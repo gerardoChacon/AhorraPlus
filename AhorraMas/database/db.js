@@ -31,5 +31,12 @@ export const createTables = () => {
       categoria TEXT NOT NULL,
       fecha TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS cuentas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      balance REAL NOT NULL,
+      color TEXT,
+      icon TEXT
+    );
   `);
 };

@@ -5,5 +5,6 @@ export default class Transaccion {
     this.categoria = categoria;
     this.fecha = fecha;
     this.descripcion = descripcion;
+    
   }
 }
