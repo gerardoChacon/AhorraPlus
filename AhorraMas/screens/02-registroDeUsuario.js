@@ -1,26 +1,89 @@
-import { Text, StyleSheet, View, TextInput, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { 
+  Text, 
+  StyleSheet, 
+  View, 
+  TextInput, 
+  Image, 
+  Dimensions, 
+  TouchableOpacity, 
+  Alert,
+  ActivityIndicator 
+} from 'react-native'
 import React, { useState } from 'react'
-import Svg, { Path } from "react-native-svg";
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../models/AuthContext'; 
+
 const {width, height} = Dimensions.get('window');
 
-
-// Funcion Registro usuario
-
-const Login = () => {
-
+const Registro = () => {
   const navigation = useNavigation();
+  const { register } = useAuth();
+  
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    const { nombre, email, password, confirmPassword } = formData;
+
+    // Validaciones
+    if (!nombre || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Las contraseñas no coinciden');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (!email.includes('@')) {
+      Alert.alert('Error', 'Por favor ingresa un email válido');
+      return;
+    }
+
+    console.log('Iniciando registro...');
+    setLoading(true);
+    
+    try {
+      const result = await register({ nombre, email, password });
+      console.log('Resultado del registro:', result);
+      
+      if (result.success) {
+        Alert.alert('Éxito', 'Cuenta creada correctamente', [
+          { text: 'OK', onPress: () => navigation.navigate('MyTabs') }
+        ]);
+      } else {
+        Alert.alert('Error', result.error || 'Error al crear la cuenta');
+      }
+    } catch (error) {
+      console.log('Error catch:', error);
+      Alert.alert('Error', 'Ocurrió un error inesperado');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateField = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <View style={styles.containerLogin}>
-
       <View style={styles.logoContainer}>
-
         <Image
-        source={require("../assets/logoAhorraMas.png")}
-        style={styles.logo}
+          source={require("../assets/logoAhorraMas.png")}
+          style={styles.logo}
         />
-
       </View>
 
       <Text style={styles.titulo}>Registro</Text>
@@ -29,85 +92,71 @@ const Login = () => {
         style={styles.input}
         placeholder="Nombre"
         placeholderTextColor="#1B5E20"
+        value={formData.nombre}
+        onChangeText={(text) => updateField('nombre', text)}
+        editable={!loading}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Correo electronico"
         placeholderTextColor="#1B5E20"
+        value={formData.email}
+        onChangeText={(text) => updateField('email', text)}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        editable={!loading}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
         placeholderTextColor="#1B5E20"
+        value={formData.password}
+        onChangeText={(text) => updateField('password', text)}
+        secureTextEntry
+        editable={!loading}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Confirmar contraseña"
         placeholderTextColor="#1B5E20"
+        value={formData.confirmPassword}
+        onChangeText={(text) => updateField('confirmPassword', text)}
+        secureTextEntry
+        editable={!loading}
       />
 
-      <TouchableOpacity style={styles.botonSesion}>
-        <Text style={styles.botonText}>Crear cuenta</Text>
+      <TouchableOpacity 
+        style={[styles.botonSesion, loading && { opacity: 0.6 }]}
+        onPress={handleRegister}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text style={styles.botonText}>Crear cuenta</Text>
+        )}
       </TouchableOpacity>
 
-
       <View style={styles.linksContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.linkText}>¿Ya tienes cuenta? inicia sesion</Text>
-          </TouchableOpacity>
-        </View>
-
-      
-
-      <View style={styles.disenoInferior}>
-        <Svg
-          xmlns="http://www.w3.org/2000/svg"
-          width={440}
-          height={244}
-          fill="none"
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Login")}
+          disabled={loading}
         >
-          <Path
-            fill="#1B5E20"
-            d="M0 0s67 67.464 181.5 104.629C296 141.795 440 124.424 440 124.424V244H0V0Z"
-            />
-          </Svg>
+          <Text style={styles.linkText}>¿Ya tienes cuenta? inicia sesion</Text>
+        </TouchableOpacity>
       </View>
-
-
     </View>
-
-    
   );
-
 }
-
-
-
-
-
 
 export default function RegistroDeUsuario() {
-  const [inicioApp, setInicioApp] = useState(true);
-
-
-  if (inicioApp) {
-    return (
-      <Login/>
-    )
-  }
-
-   
+  return <Registro />;
 }
 
-
-
 const styles = StyleSheet.create({
-
   containerLogin: {
     flex: 1,
     backgroundColor: 'white',
@@ -115,7 +164,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   
-
   logoContainer: {
     alignItems: 'center',
     marginTop: 70,
@@ -189,6 +237,4 @@ const styles = StyleSheet.create({
     color: '#1B5E20',
     fontSize: 14,
   },
-
-
 });

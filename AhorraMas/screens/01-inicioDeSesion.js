@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import Svg, { Path } from "react-native-svg";
 import { useNavigation } from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
+import { Alert } from 'react-native';
+import { useAuth } from '../models/AuthContext';
 
 
 // Funcion Pantalla de carga
@@ -30,6 +32,28 @@ const PantallaInicial = () => {
 const Login = () => {
 
   const navigation = useNavigation();
+
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
+
+    setLoading(true);
+    const result = await login(email, password);
+    setLoading(false);
+
+    if (result.success) {
+      navigation.navigate("MyTabs");
+    } else {
+      Alert.alert('Error', result.error);
+    }
+  };
 
   return (
     <View style={stylesLogin.containerLogin}>
@@ -63,20 +87,31 @@ const Login = () => {
         style={stylesLogin.input}
         placeholder="Correo"
         placeholderTextColor="#1B5E20"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
 
       <TextInput
         style={stylesLogin.input}
         placeholder="Contraseña"
         placeholderTextColor="#1B5E20"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={true}
       />
 
       <TouchableOpacity 
-        style={stylesLogin.botonSesion}
-        onPress={() => navigation.navigate("MyTabs")}
+        style={[stylesLogin.botonSesion, loading && { opacity: 0.7 }]}
+        onPress={handleLogin}
+        disabled={loading}
       >
-
-        <Text style={stylesLogin.botonText}>Iniciar sesión</Text>
+        {loading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text style={stylesLogin.botonText}>Iniciar sesión</Text>
+        )}
       </TouchableOpacity>
 
       <View style={stylesLogin.linksContainer}>
