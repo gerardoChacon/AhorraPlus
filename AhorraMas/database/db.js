@@ -12,5 +12,15 @@ export const createTables = () => {
       fecha TEXT NOT NULL,
       descripcion TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      reset_token TEXT,
+      reset_token_expiry INTEGER,
+      fecha_creacion TEXT DEFAULT (datetime('now'))
+    );
   `);
 };
