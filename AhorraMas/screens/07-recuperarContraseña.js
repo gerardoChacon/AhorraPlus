@@ -1,80 +1,123 @@
-import { Text, StyleSheet, View, TextInput, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { 
+  Text, 
+  StyleSheet, 
+  View, 
+  TextInput, 
+  Image, 
+  Dimensions, 
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator 
+} from 'react-native'
 import React, { useState } from 'react'
-import Svg, { Path } from "react-native-svg";
+import { useNavigation } from '@react-navigation/native';
+import { generarTokenRecuperacion } from '../controllers/authController';
+
 const {width, height} = Dimensions.get('window');
 
+const RecuperarPassword = () => {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
-// Funcion Registro usuario
+  const handleRecuperarPassword = async () => {
+    // Validaciones
+    if (!email) {
+      Alert.alert('Error', 'Por favor ingresa tu correo electrónico');
+      return;
+    }
 
-const Login = () => {
+    if (!email.includes('@')) {
+      Alert.alert('Error', 'Por favor ingresa un email válido');
+      return;
+    }
+
+    console.log('Solicitando recuperación para:', email);
+    setLoading(true);
+    
+    try {
+      const result = await generarTokenRecuperacion(email);
+      console.log('Resultado de recuperación:', result);
+      
+      if (result.success) {
+        Alert.alert(
+          'Correo enviado', 
+          'Se ha enviado un enlace de recuperación a tu correo electrónico. Por favor revisa tu bandeja de entrada.',
+          [
+            { 
+              text: 'OK', 
+              onPress: () => navigation.navigate('Login') 
+            }
+          ]
+        );
+      } else {
+        Alert.alert('Error', result.error || 'No se pudo enviar el correo de recuperación');
+      }
+    } catch (error) {
+      console.log('Error catch:', error);
+      Alert.alert('Error', 'Ocurrió un error inesperado al procesar tu solicitud');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.containerLogin}>
 
       <View style={styles.logoContainer}>
-
         <Image
-        source={require("../assets/logoAhorraMas.png")}
-        style={styles.logo}
+          source={require("../assets/logoAhorraMas.png")}
+          style={styles.logo}
         />
-
       </View>
 
       <Text style={styles.titulo}>Recupera tu contraseña</Text>
 
+      <Text style={styles.subtitulo}>
+        Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+      </Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Correo electronico"
+        placeholder="Correo electrónico"
         placeholderTextColor="#1B5E20"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        editable={!loading}
       />
 
-      <TouchableOpacity style={styles.botonSesion}>
-        <Text style={styles.botonText}>Enviar</Text>
+      <TouchableOpacity 
+        style={[styles.botonSesion, loading && { opacity: 0.6 }]}
+        onPress={handleRecuperarPassword}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text style={styles.botonText}>Enviar enlace</Text>
+        )}
       </TouchableOpacity>
 
-
-       <View style={styles.linksContainer}>
-          <TouchableOpacity>
-            <Text style={styles.linkText}>Volver a enviar</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.linksContainer}>
-          <TouchableOpacity>
-            <Text style={styles.linkText}>Salir</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.linksContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Login")}
+          disabled={loading}
+        >
+          <Text style={styles.linkText}>Volver a Iniciar sesión</Text>
+        </TouchableOpacity>
+      </View>
 
     </View>
-
-    
   );
-
 }
-
-
-
-
-
 
 export default function RecuperarContraseña() {
-  const [inicioApp, setInicioApp] = useState(true);
-
-
-  if (inicioApp) {
-    return (
-      <Login/>
-    )
-  }
-
-   
+  return <RecuperarPassword />;
 }
 
-
-
 const styles = StyleSheet.create({
-
   containerLogin: {
     flex: 1,
     backgroundColor: 'white',
@@ -82,27 +125,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   
-
   logoContainer: {
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 80,
     zIndex: 10,
   },
 
   logo:{
-    width: 150,
-    height: 150,
-    marginBottom: 50,
+    width: 120,
+    height: 120,
+    marginBottom: 30,
     resizeMode: 'contain',
   },
 
   titulo: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 50,
-    alignSelf: 'center',
-    color: '#000000ff',
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#000000',
     zIndex: 10,
+    fontFamily: 'Montserrat',
+  },
+
+  subtitulo: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#666',
+    marginBottom: 30,
+    paddingHorizontal: 20,
+    lineHeight: 20,
     fontFamily: 'Montserrat',
   },
 
@@ -112,7 +164,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 25,
     paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 25,
     fontSize: 16,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -132,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 0,
+    marginTop: 10,
     zIndex: 10,
   },
 
@@ -147,7 +199,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    marginTop: 30,
+    marginTop: 25,
     paddingHorizontal: 10,
     zIndex: 10,
   },
@@ -155,7 +207,6 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#1B5E20',
     fontSize: 14,
+    fontWeight: '500',
   },
-
-
 });
