@@ -246,6 +246,8 @@ export default function PresupuestoScreen() {
                 value={monto}
                 onChangeText={setMonto}
                 placeholderTextColor="#9CA3AF"
+                returnKeyType="done"
+                blurOnSubmit={true}
               />
             </View>
 
