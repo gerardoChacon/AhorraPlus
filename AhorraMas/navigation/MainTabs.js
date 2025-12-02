@@ -113,7 +113,7 @@ export default function MainTabs() {
       tabBar={(props) => <CustomTabBar {...props} />}
     >
       <Tab.Screen name="Inicio" component={HomeScreen} />
-      <Tab.Screen name="Movimientos" component={IngresosScreen} 
+      <Tab.Screen name="Movimientos" component={IngresosScreen} />
       <Tab.Screen name="Presupuestos" component={HomeScreen} />
       <Tab.Screen name="Configuración" component={HomeScreen} />
     </Tab.Navigator>
